@@ -1,8 +1,8 @@
 import winreg, re
 
-
 varReg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
 varKey = winreg.OpenKey(varReg, r"SYSTEM\\CurrentControlSet\\Enum\\USB\\",0, winreg.KEY_ALL_ACCESS)
+
 
 vidLst=list()
 pidLst=list()
@@ -16,12 +16,12 @@ text2= "	7778  Counterfeit flash drive [Kingston]"
 vidm = vidPat.search(text)
 pidm = pidPat.search(text2)
 
+
 try:
     i = 1
     while True:
         name = winreg.EnumKey(varKey, i)
         try:
-
             vidLst.append(name.split('&')[0].split('_')[1])
             pidLst.append(name.split('&')[1].split('_')[1])
         except:
@@ -29,6 +29,7 @@ try:
         i += 1
 except WindowsError:
     pass
+
 
 with open('./usbids.txt', 'rt', encoding='utf-8') as f:
     lines = f.readlines()
@@ -61,25 +62,3 @@ for vid, pid in zip(vidLst, pidLst):
         print("Cannot Find! VID : {} PID : {}".format(vid, pid))
         print("=====================================================")
 
-'''
-with open('./usbids.txt', 'rt', encoding='utf-8') as f:
-    while True:
-        line = f.readline()
-        if not line:
-            break
-        vidm = vidPat.search(line)
-        if vidm:
-            pidDict = dict()
-            vidDict[vidm.group(1)] = vidm.group(2)
-            count = 0
-            while True:
-                line = f.readline()
-                pidm = pidPat.search(line)
-
-                if not pidm:
-                    break
-                else:
-                    count += 1
-                    pidDict[pidm.group(2)] = pidm.group(3)
-            totalDict[(vidm.group(1), vidm.group(2))] = pidDict
-'''
