@@ -36,17 +36,17 @@ with open('./usbids.txt', 'rt', encoding='utf-8') as f:
     try:
         for i, line in enumerate(lines):
 
-            if vidPat.search(line):
+            if vidPat.search(line):                     #vid 찾기
                 vidm = vidPat.search(line)
-                vidDict[vidm.group(1)] = vidm.group(2)
-                pidDict = dict()
+                vidDict[vidm.group(1)] = vidm.group(2)  #찾아지면 vid에 해당하는 vendor name 딕셔너리에 추가
+                pidDict = dict()                        #vid 하위의 pid 딕셔너리 초기화
 
-            elif pidPat.search(line):
+            elif pidPat.search(line):                   #pid 찾기
                 pidm = pidPat.search(line)
-                pidDict[pidm.group(2)] = pidm.group(3)
+                pidDict[pidm.group(2)] = pidm.group(3)  #찾아지면 pid에 해당하는 device name 딕셔너리에 추가
 
             if i < len(lines):
-                if vidPat.search(lines[i+1]):
+                if vidPat.search(lines[i+1]):           #pid검색이 끝나면 이때까지 찾은 vid에 해당하는 pidDict 이중딕셔너리로 추가
                     totalDict[(vidm.group(1), vidm.group(2))] = pidDict
     except IndexError:
         print("End Of File!")
